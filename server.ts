@@ -1,4 +1,11 @@
-import { addTodo, getTodo, getTodos, updateTodo } from './controllers/todoController.ts';
+import {
+  addTodo,
+  deleteTodo,
+  getIncompleteTodo,
+  getTodo,
+  getTodos,
+  updateTodo,
+} from './controllers/todoController.ts';
 
 const PORT = 5000;
 
@@ -13,15 +20,18 @@ async function handler(req: Request): Promise<Response> {
   } else if (req.method === 'GET' && path === '/api/todos') {
     return await getTodos();
   } else if (req.method === 'GET' && path === '/api/todos/incomplete/count') {
+    return await getIncompleteTodo();
   } else if (req.method === 'GET' && path.startsWith('/api/todos')) {
-    const id = path.split('/')[3]
-    return await getTodo(id)
-  } else if (req.method === 'PUT' && path.startsWith('api/todos')) {
-    const id = path.split('/')[3]
-    return await updateTodo(id, req)
+    const id = path.split('/')[3];
+    return await getTodo(id);
+  } else if (req.method === 'PUT' && path.startsWith('/api/todos')) {
+    const id = path.split('/')[3];
+    return await updateTodo(id, req);
   } else if (req.method === 'DELETE' && path.startsWith('/api/todos')) {
+    const id = path.split('/')[3];
+    return await deleteTodo(id);
   }
-  return new Response('Not found', { status: 404 });
+  return new Response('Route not found', { status: 404 });
 }
 
 console.log(`HTTP server is runing on http://localhost${PORT}`);
